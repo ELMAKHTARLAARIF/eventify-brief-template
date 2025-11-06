@@ -419,13 +419,13 @@ textarea.input {
   align-items: flex-end;
 }
 
-.variant-row__name,
+/* .variant-row__name,
 .variant-row__qty,
 .variant-row__value,
 .variant-row__type,
 .variant-row__remove {
-  /* inherit styles from .input, .select, .btn */
-}
+  /* inherit styles from .input, .select, .btn 
+}*/
 
 @media (max-width: 768px) {
   .variant-row {
@@ -536,7 +536,7 @@ textarea.input {
 }
 
 /* ============================================
-   ALERTS
+   alert--errorS
    ============================================ */
 
 .alert {
@@ -917,4 +917,9 @@ textarea.input {
     padding: var(--spacing-xs) var(--spacing-sm);
     font-size: 13px;
   }
+}
+#div{
+  width: 80%;
+  height: 60%;
+  background-color: yellow;
 }
