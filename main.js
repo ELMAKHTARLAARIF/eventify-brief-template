@@ -63,5 +63,12 @@ function handleFormSubmit(e) {
   }
   renderEventsTable() ;
 }
+const table = document.getElementById("events-table");
+function renderEventsTable() {
+  const tbody = document.querySelector(".table__body");
+  tbody.innerHTML = "";
+  events = JSON.parse(localStorage.getItem("event")) || [];
+    renderStats();
+}renderEventsTable();
 
 
