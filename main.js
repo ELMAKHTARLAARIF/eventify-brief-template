@@ -19,7 +19,10 @@ function switchscren(ev) {
 }
 function renderStats() {
   const totalEvents = events.length;
+  const totalSeats = events.reduce((sum, e) => sum + e.seats, 0);
   const totalPrice = events.reduce((sum, e) => sum + e.price * e.seats, 0);
-
+  document.getElementById('stat-total-events').textContent = totalEvents;
+  document.getElementById('stat-total-seats').textContent = totalSeats;
+  document.getElementById('stat-total-price').textContent = '$' + totalPrice.toFixed(2);
 }
 
