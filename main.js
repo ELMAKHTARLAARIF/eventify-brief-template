@@ -68,6 +68,23 @@ function renderEventsTable() {
   const tbody = document.querySelector(".table__body");
   tbody.innerHTML = "";
   events = JSON.parse(localStorage.getItem("event")) || [];
+console.log(events)
+  events.forEach((event, index) => {
+    tbody.innerHTML += `
+      <tr class="table__row">
+        <td>${index + 1}</td>
+        <td>${event.title}</td>
+        <td>${event.seats}</td>
+        <td>${event.price}</td>
+        <td><span class="badge">3</span></td>
+        <td>
+          <button class="btn btn--small">Details</button>
+          <button class="btn btn--small">Edit</button>
+          <button class="btn btn--danger btn--small">Delete</button>
+        </td>
+      </tr>
+    `;
+  });
     renderStats();
 }renderEventsTable();
 
