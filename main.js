@@ -19,5 +19,7 @@ function switchscren(ev) {
 }
 function renderStats() {
   const totalEvents = events.length;
+  const totalPrice = events.reduce((sum, e) => sum + e.price * e.seats, 0);
+
 }
 
