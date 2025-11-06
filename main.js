@@ -26,4 +26,42 @@ function switchscren(ev) {
     }
   })
 }
+function handleFormSubmit(e) {
+  e.preventDefault();
+
+  const titleInput = document.getElementById("event-title").value.trim();
+  const imageInput = document.getElementById("event-image").value.trim();
+  const eventDescriptionInput = document.getElementById("event-description").value.trim();
+  const eventSeatsInput = document.getElementById("event-seats").value.trim();
+  const eventPriceInput = document.getElementById("event-price").value.trim();
+  const ErrorMsg = document.querySelector("#form-errors");
+  const UrlRegexp = /^https?:\/\/.+\.(jpg|jpeg|png|gif|bmp|webp|svg)$/i;
+  let valid = true;
+  ErrorMsg.textContent = "";
+  if (!titleInput || !eventDescriptionInput || !eventSeatsInput || !eventPriceInput) {
+    ErrorMsg.classList.remove("is-hidden");
+    ErrorMsg.textContent = "All fields are required.";
+    valid = false;
+  }
+  if (!UrlRegexp.test(imageInput)) {
+    ErrorMsg.classList.remove("is-hidden");
+    ErrorMsg.textContent = "Please enter a valid image URL.";
+    valid = false;
+  }
+  if (valid) {
+    ErrorMsg.classList.add("is-hidden");
+      const events = JSON.parse(localStorage.getItem("event")) || [];
+    const newEvent = {
+      title: titleInput,
+      image: imageInput,
+      description: eventDescriptionInput,
+      seats: eventSeatsInput,
+      price: eventPriceInput
+    };
+  events.push(newEvent);
+  localStorage.setItem("event", JSON.stringify(events));
+  }
+  renderEventsTable() ;
+}
+
 
