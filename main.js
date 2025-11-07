@@ -6,7 +6,7 @@ const screens = document.querySelectorAll(".screen");
 
 function renderStats() {
   const totalEvents = events.length;
-  const totalSeats = events.reduce((sum, e) => sum + e.seats, 0);
+  const totalSeats = events.reduce((sum, e) => +sum + +e.seats, 0);
   const totalPrice = events.reduce((sum, e) => sum + e.price * e.seats, 0);
   document.getElementById('stat-total-events').textContent = totalEvents;
   document.getElementById('stat-total-seats').textContent = totalSeats;
@@ -78,14 +78,24 @@ function renderEventsTable() {
         <td><span class="badge">3</span></td>
         <td>
           <button class="btn btn--small">Details</button>
-          <button class="btn btn--small">Edit</button>
-          <button class="btn btn--danger btn--small">Delete</button>
+          <button class="btn btn--small" onclick="EditEvent(${index})">Edit</button>
+          <button class="btn btn--danger btn--small" id = "deletebtn" onclick="DeleteEvent(${index})">Delete</button>
         </td>
       </tr>
     `;
   });
-
     renderStats();
 }renderEventsTable();
+// delete evenement 
+const DeleteBtn = document.querySelectorAll("#deletebtn");
+function DeleteEvent(index){
+  events.splice(index,1);//hna msse7t event li lblasa dyalo hya index
+  localStorage.event=JSON.stringify(events);//hna 3awd 7ttit events f localstorage ba3dma mse7t mnha index event
+  renderEventsTable();
+}
+const edit = document.getElementById("events-pagination")
+function EditEvent(edited){
+
+}
 
 
