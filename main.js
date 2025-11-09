@@ -165,31 +165,32 @@ function RestoreEvent(index) {
   ArchiveData();
   renderEventsTable();
 }
-// function searchData(){
-//   const searchEvents = document.getElementById("search-events");
-//   tbody.innerHTML="";
-//   for (let i = 0 ;i<events.length;i++)
-//   {
-//         if (events[i].title.includes(searchEvents.value.toLowerCase())){
-//           tbody.innerHTML += `
-//       <tr class="table__row">
-//         <td>${i+1}</td>
-//         <td>${events[i].title}</td>
-//         <td>${events[i].seats}</td>
-//         <td>${events[i].price}</td>
-//         <td><span class="badge">3</span></td>
-//         <td>
-//           <button class="btn btn--small" onclick="ViewDetails(${i})">Details</button>
-//           <button class="btn btn--small" onclick="EditEvent(${i})">Edit</button>
-//           <button class="btn btn--danger btn--small" id = "deletebtn" onclick="DeleteEvent(${i})">Delete</button>
-//         </td>
-//       </tr>
-//     `;
-//           }
+// search by title
+function searchData(){
+  const searchEvents = document.getElementById("search-events");
+  tbody.innerHTML="";
+  for (let i = 0 ;i<events.length;i++)
+  {
+        if (events[i].title.includes(searchEvents.value.toLowerCase())){
+          tbody.innerHTML += `
+      <tr class="table__row">
+        <td>${i+1}</td>
+        <td>${events[i].title}</td>
+        <td>${events[i].seats}</td>
+        <td>${events[i].price}</td>
+        <td><span class="badge">3</span></td>
+        <td>
+          <button class="btn btn--small" onclick="ViewDetails(${i})">Details</button>
+          <button class="btn btn--small" onclick="EditEvent(${i})">Edit</button>
+          <button class="btn btn--danger btn--small" id = "deletebtn" onclick="DeleteEvent(${i})">Delete</button>
+        </td>
+      </tr>
+    `;
+          }
            
-//     }
+    }
     
-//   }
+  }
   // function sortData(){
   //   for(let i = 0; i<events.title.length;i++)
   //   {
