@@ -127,6 +127,7 @@ const edit = document.getElementById("events-pagination")
 function EditEvent(edited){
 
 }
+//Details
 const modal = document.querySelector(".modal");
 function ViewDetails(index){
   const modelDetails =document.getElementById("modal-body");
@@ -151,19 +152,19 @@ closModal.onclick= function close(){
   modal.classList.add("is-hidden");
 };
 
-// function RestoreEvent(index) {
-//   const archived = JSON.parse(localStorage.getItem("archived")) || [];
-//   const events = JSON.parse(localStorage.getItem("event")) || [];
+function RestoreEvent(index) {
+  const archived = JSON.parse(localStorage.getItem("archived")) || [];
+  const events = JSON.parse(localStorage.getItem("event")) || [];
 
-//   events.push(archived[index]);
-//   localStorage.setItem("event", JSON.stringify(events));
+  events.push(archived[index]);
+  localStorage.setItem("event", JSON.stringify(events));
 
-//   archived.splice(index, 1);
-//   localStorage.setItem("archived", JSON.stringify(archived));
+  archived.splice(index, 1);
+  localStorage.setItem("archived", JSON.stringify(archived));
 
-//   ArchiveData();
-//   renderEventsTable();
-// }
+  ArchiveData();
+  renderEventsTable();
+}
 // function searchData(){
 //   const searchEvents = document.getElementById("search-events");
 //   tbody.innerHTML="";
