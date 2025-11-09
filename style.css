@@ -673,8 +673,21 @@ textarea.input {
 
 .modal__body {
   padding: var(--spacing-lg);
+  background-color: rgb(239, 232, 232);
+  font-weight: 700;
+  
+  position: relative;
+}.modal__body h3{
+text-align: center;
+margin-bottom: 20px;
+}.modal__body p{
+  margin: 0 0 15px 30px;
 }
-
+.modal__body img{
+  margin-left: 30px;
+  width: 60px;
+  height: 60px;
+}
 /* ============================================
    UTILITIES
    ============================================ */

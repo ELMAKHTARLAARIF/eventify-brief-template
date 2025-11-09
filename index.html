@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="main.js" defer></script>
 </head>
+
 <body>
     <div class="app">
         <!-- SIDEBAR -->
@@ -56,7 +58,7 @@
 
             <!-- SCREENS (only one visible at a time) -->
             <div class="screens">
-                
+
                 <!-- SCREEN 1: Statistics (DEFAULT) -->
                 <section class="screen is-visible" data-screen="stats">
                     <div class="screen__content">
@@ -79,34 +81,34 @@
                         </div>
 
                         <!-- Placeholder for chart (students can add Chart.js or similar) -->
-<div style="width: 1100px;">
-  <canvas id="myChart"></canvas>
-</div>
+                        <div style="width: 1100px;">
+                            <canvas id="myChart"></canvas>
+                        </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script>
-  const ctx = document.getElementById('myChart');
+                        <script>
+                            const ctx = document.getElementById('myChart');
 
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: ['event 1', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-      datasets: [{
-        label: '# of Votes',
-        data: [12, 19, 3, 5, 2, 3],
-        borderWidth: 3
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
-</script>
+                            new Chart(ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: ['event 1', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                                    datasets: [{
+                                        label: '# of Votes',
+                                        data: [12, 19, 3, 5, 2, 3],
+                                        borderWidth: 3
+                                    }]
+                                },
+                                options: {
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true
+                                        }
+                                    }
+                                }
+                            });
+                        </script>
 
                     </div>
                 </section>
@@ -114,99 +116,77 @@
                 <!-- SCREEN 2: Add Event -->
                 <section class="screen" data-screen="add">
                     <div class="screen__content">
-                        <form class="form" id="event-form" >
+                        <form class="form" id="event-form">
                             <!-- Error messages area -->
                             <div class="alert alert--error is-hidden" id="form-errors"></div>
 
                             <!-- Title -->
                             <div class="form__group">
                                 <label class="form__label" for="event-title">Event Title</label>
-                                <input 
-                                    type="text" 
-                                    id="event-title" 
-                                    class="input" 
-                                    placeholder="Enter event title"
-                                    required
-                                >
+                                <input type="text" id="event-title" class="input" placeholder="Enter event title"
+                                    required>
                             </div>
 
                             <!-- Image URL -->
                             <div class="form__group">
                                 <label class="form__label" for="event-image">Image URL</label>
-                                <input 
-                                    type="url" 
-                                    id="event-image" 
-                                    class="input" 
-                                    placeholder="https://example.com/image.jpg"
-                                >
+                                <input type="url" id="event-image" class="input"
+                                    placeholder="https://example.com/image.jpg">
                             </div>
 
                             <!-- Description -->
                             <div class="form__group">
                                 <label class="form__label" for="event-description">Description</label>
-                                <textarea 
-                                    id="event-description" 
-                                    class="input" 
-                                    placeholder="Describe the event..."
-                                    rows="4"
-                                ></textarea>
+                                <textarea id="event-description" class="input" placeholder="Describe the event..."
+                                    rows="4"></textarea>
                             </div>
 
                             <!-- Seats -->
                             <div class="form__group">
                                 <label class="form__label" for="event-seats">Number of Seats</label>
-                                <input 
-                                    type="number" 
-                                    id="event-seats" 
-                                    class="input" 
-                                    placeholder="100"
-                                    min="1"
-                                    required
-                                >
+                                <input type="number" id="event-seats" class="input" placeholder="100" min="1" required>
                             </div>
 
                             <!-- Base Price -->
                             <div class="form__group">
                                 <label class="form__label" for="event-price">Base Price ($)</label>
-                                <input 
-                                    type="number" 
-                                    id="event-price" 
-                                    class="input" 
-                                    placeholder="50.00"
-                                    min="0"
-                                    step="0.01"
-                                    required
-                                >
+                                <input type="number" id="event-price" class="input" placeholder="50.00" min="0"
+                                    step="0.01" required>
                             </div>
 
                             <!-- VARIANTS SECTION -->
                             <fieldset class="variants">
                                 <legend class="variants__title">
                                     Pricing Variants (Optional)
-                                    <button type="button" class="btn btn--small" id="btn-add-variant">+ Add Variant</button>
+                                    <button type="button" class="btn btn--small" id="btn-add-variant">+ Add
+                                        Variant</button>
                                 </legend>
-                                
+
                                 <!-- Variant rows will be appended here by JS -->
                                 <div id="variants-list" class="variants__list">
                                     <!-- EXAMPLE: Students should clone this structure -->
-                                    
+
                                     <div class="variant-row">
-                                        <input type="text" class="input variant-row__name" placeholder="Variant name (e.g., 'Early Bird')" />
+                                        <input type="text" class="input variant-row__name"
+                                            placeholder="Variant name (e.g., 'Early Bird')" />
                                         <input type="number" class="input variant-row__qty" placeholder="Qty" min="1" />
-                                        <input type="number" class="input variant-row__value" placeholder="Value" step="0.01" />
+                                        <input type="number" class="input variant-row__value" placeholder="Value"
+                                            step="0.01" />
                                         <select class="select variant-row__type">
                                             <option value="fixed">Fixed Price</option>
                                             <option value="percentage">Percentage Off</option>
                                         </select>
-                                        <button type="button" class="btn btn--danger btn--small variant-row__remove">Remove</button>
+                                        <button type="button"
+                                            class="btn btn--danger btn--small variant-row__remove">Remove</button>
                                     </div>
-                                    
+
                                 </div>
                             </fieldset>
 
                             <!-- Submit Button -->
                             <div class="form__actions">
-                                <button type="submit" class="btn btn--primary" onclick="handleFormSubmit(event)">Create Event</button>
+                                <button type="submit" class="btn btn--primary" onclick="handleFormSubmit(event)">Create
+                                    Event</button>
                                 <button type="reset" class="btn btn--ghost">Clear</button>
                             </div>
                         </form>
@@ -218,12 +198,8 @@
                     <div class="screen__content">
                         <!-- Search & Sort Controls -->
                         <div class="controls">
-                            <input 
-                                type="text" 
-                                id="search-events" 
-                                class="input" 
-                                placeholder="🔍 Search events by title..."
-                            >
+                            <input type="text" id="search-events" class="input"
+                                placeholder="🔍 Search events by title..." onkeyup="searchData()">
                             <select id="sort-events" class="select">
                                 <option value="title-asc">Sort: Title (A-Z)</option>
                                 <option value="title-desc">Sort: Title (Z-A)</option>
@@ -254,12 +230,15 @@
                                     <td>$0</td>
                                     <td><span class="badge">0</span></td>
                                     <td>
-                                        <button class="btn btn--small" data-action="details" data-event-id="1">Details</button>
-                                        <button class="btn btn--small" data-action="edit" data-event-id="1">Edit</button>
-                                        <button class="btn btn--danger btn--small" data-action="archive" data-event-id="1">Delete</button>
+                                        <button class="btn btn--small" data-action="details"
+                                            data-event-id="1">Details</button>
+                                        <button class="btn btn--small" data-action="edit"
+                                            data-event-id="1">Edit</button>
+                                        <button class="btn btn--danger btn--small" data-action="archive"
+                                            data-event-id="1">Delete</button>
                                     </td>
                                 </tr>
-                            
+
                             </tbody>
                         </table>
 
@@ -283,7 +262,7 @@
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody class="table__body">
+                            <tbody class="table__body" id="tablebody">
                                 <!-- EXAMPLE: Students will populate this with JS -->
                                 <!-- 
                                 <tr class="table__row" data-event-id="1">
@@ -292,7 +271,7 @@
                                     <td>50</td>
                                     <td>$29.99</td>
                                     <td>
-                                        <button class="btn btn--small" data-action="restore" data-event-id="1">Restore</button>
+                                        <button class="restorbtn btn--small" data-action="restore" data-event-id="1">Restore</button>
                                     </td>
                                 </tr>
                                 -->
@@ -341,4 +320,5 @@
     -->
 
 </body>
+
 </html>
