@@ -200,9 +200,9 @@
                         <div class="controls">
                             <input type="text" id="search-events" class="input"
                                 placeholder="🔍 Search events by title..." onkeyup="searchData()">
-                            <select id="sort-events" class="select">
-                                <option value="title-asc">Sort: Title (A-Z)</option>
-                                <option value="title-desc">Sort: Title (Z-A)</option>
+                            <select id="sort-events" class="select"  onchange="sortData(this.value)">
+                                <option value="title-asc" id="sortAZ">Sort: Title (A-Z)</option>
+                                <option value="title-desc" id="sortZA" >Sort: Title (Z-A)</option>
                                 <option value="price-asc">Sort: Price (Low to High)</option>
                                 <option value="price-desc">Sort: Price (High to Low)</option>
                                 <option value="seats-asc">Sort: Seats (Low to High)</option>

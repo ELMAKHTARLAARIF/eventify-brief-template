@@ -22,7 +22,7 @@ function switchscren(ev) {
       ev.classList.add("is-active");
     }
     else {
-      screen.classList.remove("is-visible") 
+      screen.classList.remove("is-visible")
     }
   })
 }
@@ -50,24 +50,24 @@ function handleFormSubmit(e) {
   // }
   if (valid) {
     ErrorMsg.classList.add("is-hidden");
-       events = JSON.parse(localStorage.getItem("event")) || [];
+    events = JSON.parse(localStorage.getItem("event")) || [];
 
     const newEvent = {
       title: titleInput.toLowerCase(),
       image: imageInput,
       description: eventDescriptionInput,
       seats: eventSeatsInput,
-      price: eventPriceInput
+      price: parseInt(eventPriceInput)
     };
-  events.push(newEvent);
-  localStorage.setItem("event", JSON.stringify(events));
+    events.push(newEvent);
+    localStorage.setItem("event", JSON.stringify(events));
   }
-  renderEventsTable() ;
-} 
- const tbody = document.querySelector(".table__body");
+  renderEventsTable();
+}
+const tbody = document.querySelector(".table__body");
 const table = document.getElementById("events-table");
+
 function renderEventsTable() {
-  const tbody = document.querySelector(".table__body");
   tbody.innerHTML = "";
   events = JSON.parse(localStorage.getItem("event")) || [];
   events.forEach((event, index) => {
@@ -86,11 +86,12 @@ function renderEventsTable() {
       </tr>
     `;
   });
-    renderStats();
-}renderEventsTable();
+  renderStats();
+} renderEventsTable();
+
 // delete evenement 
 function DeleteEvent(index) {
-   events = JSON.parse(localStorage.getItem("event")) || [];
+  events = JSON.parse(localStorage.getItem("event")) || [];
 
   archive.push(events[index]);
 
@@ -105,7 +106,7 @@ function DeleteEvent(index) {
 function ArchiveData() {
   const archiveTable = document.getElementById("tablebody");
 
- archive = JSON.parse(localStorage.getItem("archived")) || [];
+  archive = JSON.parse(localStorage.getItem("archived")) || [];
 
   archiveTable.innerHTML = "";
   archive.forEach((item, index) => {
@@ -121,21 +122,21 @@ function ArchiveData() {
       </tr>
     `;
   });
-}ArchiveData();
+} ArchiveData();
 
 const edit = document.getElementById("events-pagination")
-function EditEvent(edited){
+function EditEvent(edited) {
 
 }
 //Details
 const modal = document.querySelector(".modal");
-function ViewDetails(index){
-  const modelDetails =document.getElementById("modal-body");
+function ViewDetails(index) {
+  const modelDetails = document.getElementById("modal-body");
   const modalContent = document.getElementById("modal-details")
   console.log(modelDetails)
   console.log(modal)
   modal.classList.remove("is-hidden");
-  modelDetails.innerHTML=`
+  modelDetails.innerHTML = `
                 <h3> ${events[index].title}</h3>
                 <p>ID ${index + 1}</p>
                 <p>image </p>
@@ -148,7 +149,7 @@ function ViewDetails(index){
 }
 const closModal = document.querySelector(".modal__close");
 console.log(closModal)
-closModal.onclick= function close(){
+closModal.onclick = function close() {
   modal.classList.add("is-hidden");
 };
 
@@ -166,15 +167,14 @@ function RestoreEvent(index) {
   renderEventsTable();
 }
 // search by title
-function searchData(){
+function searchData() {
   const searchEvents = document.getElementById("search-events");
-  tbody.innerHTML="";
-  for (let i = 0 ;i<events.length;i++)
-  {
-        if (events[i].title.includes(searchEvents.value.toLowerCase())){
-          tbody.innerHTML += `
+  tbody.innerHTML = "";
+  for (let i = 0; i < events.length; i++) {
+    if (events[i].title.includes(searchEvents.value.toLowerCase())) {
+      tbody.innerHTML += `
       <tr class="table__row">
-        <td>${i+1}</td>
+        <td>${i + 1}</td>
         <td>${events[i].title}</td>
         <td>${events[i].seats}</td>
         <td>${events[i].price}</td>
@@ -186,18 +186,181 @@ function searchData(){
         </td>
       </tr>
     `;
-          }
-           
     }
-    
-  }
-  // function sortData(){
-  //   for(let i = 0; i<events.title.length;i++)
-  //   {
-  //     for(let j = 0;j<events.title.length + i - 1 ;j++)
-  //     {
 
-  //     }
-  //   }
-  // }
-  // localStorage.clear();
+  }
+
+}
+
+function sortData(value) {
+  // console.log(value)
+  let events = JSON.parse(localStorage.getItem("event"));
+  if (value === "title-asc") {
+    sortAZ();
+  }
+  else if (value === "title-desc") {
+    sortZA();
+  } else if (value === "price-asc") {
+    priceLoHi();
+  }else if(value ==="price-desc"){
+    priceHiLo();
+  }else{
+    sortSeats();
+  }
+
+}
+function sortAZ() {
+
+  for (let i = 0; i < events.length; i++) {
+    for (let j = 0; j < events.length - i - 1; j++) {
+      if (events[j].title.toLowerCase() > events[j + 1].title.toLowerCase()) {
+        const temp = events[j];
+        events[j] = events[j + 1];
+        events[j + 1] = temp;
+      }
+    }
+  }
+  console.log(events[0].title);
+  // localStorage.setItem("event", JSON.stringify(events));
+  tbody.innerHTML = "";
+  console.log(tbody)
+  events.forEach((event, index) => {
+    tbody.innerHTML += `
+      <tr class="table__row">
+        <td>${index + 1}</td>
+        <td>${event.title}</td>
+        <td>${event.seats}</td>
+        <td>${event.price}</td>
+        <td><span class="badge">3</span></td>
+        <td>
+          <button class="btn btn--small" onclick="ViewDetails(${index})">Details</button>
+          <button class="btn btn--small" onclick="EditEvent(${index})">Edit</button>
+          <button class="btn btn--danger btn--small" id="deletebtn" onclick="DeleteEvent(${index})">Delete</button>
+        </td>
+      </tr>
+    `;
+  });
+}
+function sortZA() {
+  for (let i = 0; i < events.length; i++) {
+    for (let j = 0; j < events.length - i - 1; j++) {
+      if (events[j].title.toLowerCase() < events[j + 1].title.toLowerCase()) {
+        const temp = events[j + 1];
+        events[j + 1] = events[j];
+        events[j] = temp;
+      }
+    }
+  }
+  console.log(events[0].title);
+  // localStorage.setItem("event", JSON.stringify(events));
+  tbody.innerHTML = "";
+  console.log(tbody)
+  events.forEach((event, index) => {
+    tbody.innerHTML += `
+      <tr class="table__row">
+        <td>${index + 1}</td>
+        <td>${event.title}</td>
+        <td>${event.seats}</td>
+        <td>${event.price}</td>
+        <td><span class="badge">3</span></td>
+        <td>
+          <button class="btn btn--small" onclick="ViewDetails(${index})">Details</button>
+          <button class="btn btn--small" onclick="EditEvent(${index})">Edit</button>
+          <button class="btn btn--danger btn--small" id="deletebtn" onclick="DeleteEvent(${index})">Delete</button>
+        </td>
+      </tr>
+    `;
+  });
+}
+function priceLoHi() {
+for (let i = 0; i < events.length - 1; i++) {
+  for (let j = 0; j < events.length - i - 1; j++) {
+    if (events[j].price > events[j + 1].price) {
+      const temp = events[j];
+      events[j] = events[j + 1];
+      events[j + 1] = temp;
+    }
+  }
+}
+  // localStorage.setItem("event", JSON.stringify(events));
+  tbody.innerHTML = "";
+  console.log(tbody)
+  events.forEach((event, index) => {
+    tbody.innerHTML += `
+      <tr class="table__row">
+        <td>${index + 1}</td>
+        <td>${event.title}</td>
+        <td>${event.seats}</td>
+        <td>${event.price}</td>
+        <td><span class="badge">3</span></td>
+        <td>
+          <button class="btn btn--small" onclick="ViewDetails(${index})">Details</button>
+          <button class="btn btn--small" onclick="EditEvent(${index})">Edit</button>
+          <button class="btn btn--danger btn--small" id="deletebtn" onclick="DeleteEvent(${index})">Delete</button>
+        </td>
+      </tr>
+    `;
+  });
+}
+function priceHiLo() {
+for (let i = 0; i < events.length - 1; i++) {
+  for (let j = 0; j < events.length - i - 1; j++) {
+    if (events[j].price < events[j + 1].price) {
+      const temp = events[j];
+      events[j] = events[j + 1];
+      events[j + 1] = temp;
+    }
+  }
+}
+  // localStorage.setItem("event", JSON.stringify(events));
+  tbody.innerHTML = "";
+  console.log(tbody)
+  events.forEach((event, index) => {
+    tbody.innerHTML += `
+      <tr class="table__row">
+        <td>${index + 1}</td>
+        <td>${event.title}</td>
+        <td>${event.seats}</td>
+        <td>${event.price}</td>
+        <td><span class="badge">3</span></td>
+        <td>
+          <button class="btn btn--small" onclick="ViewDetails(${index})">Details</button>
+          <button class="btn btn--small" onclick="EditEvent(${index})">Edit</button>
+          <button class="btn btn--danger btn--small" id="deletebtn" onclick="DeleteEvent(${index})">Delete</button>
+        </td>
+      </tr>
+    `;
+  });
+}
+function sortSeats(){
+  for (let i = 0; i < events.length - 1; i++) {
+  for (let j = 0; j < events.length - i - 1; j++) {
+    if (events[j].seats < events[j + 1].seats) {
+      const temp = events[j];
+      events[j] = events[j + 1];
+      events[j + 1] = temp;
+    }
+  }
+}
+  // localStorage.setItem("event", JSON.stringify(events));
+  tbody.innerHTML = "";
+  console.log(tbody)
+  events.forEach((event, index) => {
+    tbody.innerHTML += `
+      <tr class="table__row">
+        <td>${index + 1}</td>
+        <td>${event.title}</td>
+        <td>${event.seats}</td>
+        <td>${event.price}</td>
+        <td><span class="badge">3</span></td>
+        <td>
+          <button class="btn btn--small" onclick="ViewDetails(${index})">Details</button>
+          <button class="btn btn--small" onclick="EditEvent(${index})">Edit</button>
+          <button class="btn btn--danger btn--small" id="deletebtn" onclick="DeleteEvent(${index})">Delete</button>
+        </td>
+      </tr>
+    `;
+  });
+}
+
+// localStorage.clear();
