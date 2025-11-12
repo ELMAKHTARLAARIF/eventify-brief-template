@@ -7,6 +7,7 @@
     <title>Events Management App</title>
     <link rel="stylesheet" href="style.css">
     <script src="main.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -85,15 +86,15 @@
                             <canvas id="myChart"></canvas>
                         </div>
 
-                        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-                        <script>
+                  
+                        <!-- <script>
+                            const events= require("./main.js")
                             const ctx = document.getElementById('myChart');
 
                             new Chart(ctx, {
                                 type: 'line',
                                 data: {
-                                    labels: ['event 1', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                                    labels: events.length,
                                     datasets: [{
                                         label: '# of Votes',
                                         data: [12, 19, 3, 5, 2, 3],
@@ -108,7 +109,7 @@
                                     }
                                 }
                             });
-                        </script>
+                        </script> -->
 
                     </div>
                 </section>
@@ -131,7 +132,7 @@
                             <div class="form__group">
                                 <label class="form__label" for="event-image">Image URL</label>
                                 <input type="url" id="event-image" class="input"
-                                    placeholder="https://example.com/image.jpg">
+                                    placeholder="https://example.com/image.jpg" required>
                             </div>
 
                             <!-- Description -->
@@ -158,7 +159,7 @@
                             <fieldset class="variants">
                                 <legend class="variants__title">
                                     Pricing Variants (Optional)
-                                    <button type="button" class="btn btn--small" id="btn-add-variant">+ Add
+                                    <button type="button" class="btn btn--small" id="btn-add-variant" onclick="AddVariante()">+ Add
                                         Variant</button>
                                 </legend>
 
@@ -166,19 +167,7 @@
                                 <div id="variants-list" class="variants__list">
                                     <!-- EXAMPLE: Students should clone this structure -->
 
-                                    <div class="variant-row">
-                                        <input type="text" class="input variant-row__name"
-                                            placeholder="Variant name (e.g., 'Early Bird')" />
-                                        <input type="number" class="input variant-row__qty" placeholder="Qty" min="1" />
-                                        <input type="number" class="input variant-row__value" placeholder="Value"
-                                            step="0.01" />
-                                        <select class="select variant-row__type">
-                                            <option value="fixed">Fixed Price</option>
-                                            <option value="percentage">Percentage Off</option>
-                                        </select>
-                                        <button type="button"
-                                            class="btn btn--danger btn--small variant-row__remove">Remove</button>
-                                    </div>
+
 
                                 </div>
                             </fieldset>
@@ -200,9 +189,9 @@
                         <div class="controls">
                             <input type="text" id="search-events" class="input"
                                 placeholder="🔍 Search events by title..." onkeyup="searchData()">
-                            <select id="sort-events" class="select"  onchange="sortData(this.value)">
+                            <select id="sort-events" class="select" onchange="sortData(this.value)">
                                 <option value="title-asc" id="sortAZ">Sort: Title (A-Z)</option>
-                                <option value="title-desc" id="sortZA" >Sort: Title (Z-A)</option>
+                                <option value="title-desc" id="sortZA">Sort: Title (Z-A)</option>
                                 <option value="price-asc">Sort: Price (Low to High)</option>
                                 <option value="price-desc">Sort: Price (High to Low)</option>
                                 <option value="seats-asc">Sort: Seats (Low to High)</option>
@@ -247,6 +236,91 @@
                             <!-- JS will generate pagination buttons -->
                         </div>
                     </div>
+
+                    <div class="modal is-hidden" id="edit-modal">
+
+                        <div class="screen__content" id="edit-modal-content">
+                            <div class="edit-modal-title">
+                                <h3 class="modal__title" id="modal-title">Edit Event </h3>
+                                <button class="modal__close" data-action="close-modal" id="close-edit-modal">&times;</button>
+                            </div>
+
+                            <form class="form" id="event-form-edit">
+                                <!-- Error messages area -->
+                                <div class="alert alert--error is-hidden" id="form-errors"></div>
+
+                                <!-- Title -->
+                                <div class="form__group">
+                                    <label class="form__label" for="event-title">Event Title</label>
+                                    <input type="text" id="event-title" class="inputs" placeholder="Enter event title"
+                                        required>
+                                </div>
+
+                                <!-- Image URL -->
+                                <div class="form__group">
+                                    <label class="form__label" for="event-image">Image URL</label>
+                                    <input type="url" id="event-image" class="inputs"
+                                        placeholder="https://example.com/image.jpg">
+                                </div>
+
+                                <!-- Description -->
+                                <div class="form__group">
+                                    <label class="form__label" for="event-description">Description</label>
+                                    <textarea id="event-description" class="inputs" placeholder="Describe the event..."
+                                        rows="4"></textarea>
+                                </div>
+
+                                <!-- Seats -->
+                                <div class="form__group">
+                                    <label class="form__label" for="event-seats">Number of Seats</label>
+                                    <input type="number" id="event-seats" class="inputs" placeholder="100" min="1"
+                                        required>
+                                </div>
+
+                                <!-- Base Price -->
+                                <div class="form__group">
+                                    <label class="form__label" for="event-price">Base Price ($)</label>
+                                    <input type="number" id="event-price" class="inputs" placeholder="50.00" min="0"
+                                        step="0.01" required>
+                                </div>
+
+                                <!-- VARIANTS SECTION -->
+                                <fieldset class="variants">
+                                    <legend class="variants__title">
+                                        Pricing Variants (Optional)
+                                        <button type="button" class="btn btn--small" id="btn-add-variant">+ Add
+                                            Variant</button>
+                                    </legend>
+
+                                    <!-- Variant rows will be appended here by JS -->
+                                    <div id="variants-list" class="variants__list">
+                                        <!-- EXAMPLE: Students should clone this structure -->
+
+                                        <div class="variant-row">
+                                            <input type="text" class="inputs variant-row__name"
+                                                placeholder="Variant name (e.g., 'Early Bird')" />
+                                            <input type="number" class="inputs variant-row__qty" placeholder="Qty"
+                                                min="1" />
+                                            <input type="number" class="inputs variant-row__value" placeholder="Value"
+                                                step="0.01" />
+                                            <select class="select variant-row__type">
+                                                <option value="fixed">Fixed Price</option>
+                                                <option value="percentage">Percentage Off</option>
+                                            </select>
+                                            <button type="button"
+                                                class="btn btn--danger btn--small variant-row__remove">Remove</button>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <!-- Submit Button -->
+                                <div class="form__actions">
+                                    <button type="submit" class="btn btn--primary" id="edit-event">Edit event</button>
+                                    <button type="reset" class="btn btn--ghost">Clear</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </section>
 
                 <!-- SCREEN 4: Archive -->
@@ -286,18 +360,17 @@
 
     <!-- MODAL (hidden by default) -->
     <div class="modal is-hidden" id="event-modal">
-        <div class="modal__overlay"></div>
+        <!-- <div class="modal__overlay"></div> -->
         <div class="modal__content">
             <header class="modal__header">
                 <h3 class="modal__title" id="modal-title">Event Details</h3>
-                <button class="modal__close" data-action="close-modal">&times;</button>
+                <button class="modal__close" data-action="close-modal" id="close-modal">&times;</button>
             </header>
             <div class="modal__body" id="modal-body">
                 <!-- Content populated by JS -->
             </div>
         </div>
     </div>
-
     <!-- SAMPLE DATA (for reference) -->
     <!-- 
     const sampleEvents = [
@@ -318,6 +391,7 @@
 
     const sampleArchive = [];
     -->
+      
 
 </body>
 
