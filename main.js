@@ -86,13 +86,15 @@ addVarianteBtn.addEventListener("click", () => {
     newRow.remove();
   });
 });
-
+const ErrorMsg = document.querySelector("#form-errors");
 function addVariante() {
   let variantRowName = varianteClose.querySelectorAll(".variant-row__name");
   let variantRowqty = varianteClose.querySelectorAll(".variant-row__qty");
   let variantRowvalue = varianteClose.querySelectorAll(".variant-row__value");
   let variantRowType = varianteClose.querySelectorAll(".variant-row__type");
  let variants = [];
+ if(variantRowName&&variantRowqty&&variantRowvalue)
+ {
   for (let i = 0; i < variantRowName.length; i++) {
     variants.push({
       name: variantRowName[i].value,
@@ -101,12 +103,18 @@ function addVariante() {
       type: variantRowType[i].value
     });
   }
-
+  
+  }
+  else{
+    ErrorMsg.classList.remove("is-hidden");
+    ErrorMsg.textContent = "All fields are required.";
+  }
   return variants;
 }
+let Id =JSON.parse((localStorage.getItem("keyId"))) || 1;
 
-let id=0;
 function handleFormSubmit(e) {
+  
   e.preventDefault();
   const titleInput = document.getElementById("event-title").value.trim();
   const imageInput = document.getElementById("event-image").value.trim();
@@ -114,7 +122,7 @@ function handleFormSubmit(e) {
   const eventDescriptionInput = document.getElementById("event-description").value.trim();
   const eventSeatsInput = document.getElementById("event-seats").value.trim();
   const eventPriceInput = document.getElementById("event-price").value.trim();
-  const ErrorMsg = document.querySelector("#form-errors");
+  
 
   const UrlRegexp = /^https?:\/\/.+\.(jpg|jpeg|png|gif|photos|bmp|webp|svg)$/i;
   let valid = true;
@@ -135,10 +143,10 @@ function handleFormSubmit(e) {
 
   if (valid) {
     ErrorMsg.classList.add("is-hidden");
-    events = JSON.parse(localStorage.getItem("event")) ;
+    events = JSON.parse(localStorage.getItem("event")) || [] ;
 
     const newEvent = {
-      id:++id,
+      id:Id,
       title: titleInput.toLowerCase(),
       image: imageInput,
       description: eventDescriptionInput,
@@ -148,8 +156,9 @@ function handleFormSubmit(e) {
     }; 
     events.push(newEvent);
     localStorage.setItem("event", JSON.stringify(events));
-    console.log(events);
-    form.reset();
+    Id++;
+    localStorage.setItem("keyId", JSON.stringify(Id))
+    // form.reset();
   }
   //ila maderthach hna maghadich tjib data dyal variants
   varianteClose.innerHTML="";
@@ -161,7 +170,7 @@ const tbody = document.querySelector(".table__body");
 
 function renderEventsTable() {
   tbody.innerHTML = "";
-  events = JSON.parse(localStorage.getItem("event")) ;
+  events = JSON.parse(localStorage.getItem("event"))|| [];
   events.forEach((event, index) => {
     tbody.insertAdjacentHTML("beforeend", `
       <tr class="table__row">
@@ -169,7 +178,7 @@ function renderEventsTable() {
         <td>${event.title}</td>
         <td>${event.seats}</td>
         <td>${event.price}</td>
-        <td><span class="badge">${event.variants.length}</span></td>
+        <td><span class="badge">${(event.variants||[]).length}</span></td>
         <td>
           <button class="btn btn--small" onclick="ViewDetails(${index})">Details</button>
           <button class="btn btn--small" onclick="EditEvent(${index})">Edit</button>
@@ -182,10 +191,40 @@ function renderEventsTable() {
 }
 renderEventsTable();
 
+function ViewDetails(index) {
+  const events = JSON.parse(localStorage.getItem("event")) ;
+const modalDetails = document.getElementById("modal-body");
+  modal.classList.remove("is-hidden");
+
+  modalDetails.innerHTML = `
+    <h3>${events[index].title}</h3>
+    <p>ID: ${events[index].id}</p>
+    <p>Image:</p>
+    <img src="${events[index].image}" class="image" alt="Event Image"/>
+    <p>Seats: ${events[index].seats}</p>
+    <p>Price: ${events[index].price }$</p>
+    <div class="variantsDetails">
+    <h2> Nombre Variants(${events[index].variants.length})</h2>
+      ${events[index].variants.map(
+          (v, i) => `
+            <div class="variant">       
+              <h4>Variant ${i+1}: ${v.name}</h4>
+              <p>Quantity: ${v.qty}</p>
+              <p>Value: ${v.value}</p>
+              <p>Type: ${v.type}</p>
+            </div>
+          `
+        )
+        .join("")}
+
+    </div>
+  `;
+}
+
 // delete event 
 function DeleteEvent(index) {
-  events = JSON.parse(localStorage.getItem("event"));
-  archive = JSON.parse(localStorage.getItem("archived")) ;
+  events = JSON.parse(localStorage.getItem("event")) || [];
+  archive = JSON.parse(localStorage.getItem("archived")) ||[];
 
   if (events[index]) {
     archive.push(events[index]);
@@ -200,9 +239,8 @@ function DeleteEvent(index) {
 
 function ArchiveData() {
   const archiveTable = document.getElementById("tablebody");
-  if (!archiveTable) return;
 
-  archive = JSON.parse(localStorage.getItem("archived")) ;
+  archive = JSON.parse(localStorage.getItem("archived")) ||[];
   archiveTable.innerHTML = "";
   archive.forEach((item, index) => {
     archiveTable.insertAdjacentHTML("beforeend",  `
