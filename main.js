@@ -80,6 +80,11 @@ addVarianteBtn.addEventListener("click", () => {
     </div>
   `);
 
+  const newRow = varianteClose.lastElementChild;
+  const removeBtn = newRow.querySelector(".variant-row__remove");
+  removeBtn.addEventListener("click", () => {
+    newRow.remove();
+  });
 });
 
 function addVariante() {
@@ -217,38 +222,7 @@ ArchiveData();
 
 // Details modal
 const modal = document.querySelector("#event-modal");
-function ViewDetails(index) {
-  const events = JSON.parse(localStorage.getItem("event")) ;
- 
 
-  const modalDetails = document.getElementById("modal-body");
-  modal.classList.remove("is-hidden");
-
-
-  modalDetails.innerHTML = `
-    <h3>${events[index].title}</h3>
-    <p>ID: ${events[index].id}</p>
-    <p>Image:</p>
-    <img src="${events[index].image}" class="image" alt="Event Image"/>
-    <p>Seats: ${events[index].seats}</p>
-    <p>Price: ${events[index].price }$</p>
-    <div class="variantsDetails">
-    <h2> Nombre Variants(${events[index].variants.length})</h2>
-      ${events[index].variants.map(
-          (v, i) => `
-            <div class="variant">       
-              <h4>Variant ${i+1}: ${v.name}</h4>
-              <p>Quantity: ${v.qty}</p>
-              <p>Value: ${v.value}</p>
-              <p>Type: ${v.type}</p>
-            </div>
-          `
-        )
-        .join("")}
-
-    </div>
-  `;
-}
 
 const closModal = document.querySelector("#close-modal");
 if (closModal) {
