@@ -203,19 +203,20 @@ h6 {
 }
 
 .screen__content {
-  max-width: 1400px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: var(--spacing-xl);
 }#edit-modal-content{
   background-color: rgb(44, 112, 117);
   height: 600px;
+  width: 700px;
    overflow: auto;
    color: white;
    box-shadow: 0px 10px 10px black;
    border-radius: 10px;
  backdrop-filter: blur(8px) brightness(0.9) contrast(1.2);
 }#edit-modal{
-max-height: 1000px;
+max-height: 1400px;
 margin: 0 auto;
 }
 .edit-modal-title{
@@ -427,7 +428,7 @@ textarea.input {
 }
 
 .variants__list {
-  display: flex;
+  display: none;
   flex-direction: column;
   gap: var(--spacing-md);
 }
@@ -695,10 +696,11 @@ textarea.input {
   padding: var(--spacing-lg);
   background-color: rgb(239, 232, 232);
   font-weight: 700;
-  
   position: relative;
 }.modal__body h3{
 text-align: center;
+color: #721c24;
+font-size: 25px;
 margin-bottom: 20px;
 }.modal__body p{
   margin: 0 0 15px 30px;
@@ -707,7 +709,18 @@ margin-bottom: 20px;
   margin-left: 30px;
   width: 60px;
   height: 60px;
+}.variantsDetails{
+  width: 100%;
+  height:fit-content;
+
+}.variant h4{
+margin: 5px 0 10px 0;
+font-size: 20px;
+color: #0c5460;
+}.variant p{
+margin: 5px 0 10px 20px;
 }
+
 /* ============================================
    UTILITIES
    ============================================ */

@@ -1,11 +1,8 @@
 let events = [];
 let archive = [];
-const sidebar_btns = document.querySelectorAll(".sidebar__btn");
-const screens = document.querySelectorAll(".screen");
 
 function char() {
   const ctx = document.getElementById('myChart');
-  if (!ctx || typeof Chart === "undefined") return;
 
   if (window.myChart && typeof window.myChart.destroy === "function") {
     window.myChart.destroy();
@@ -50,7 +47,8 @@ function renderStats() {
     char();
 }
 
-
+const sidebar_btns = document.querySelectorAll(".sidebar__btn");
+const screens = document.querySelectorAll(".screen");
 function switchscren(ev) {
   sidebar_btns.forEach(btn => btn.classList.remove("is-active"));
   screens.forEach(screen => {
@@ -63,9 +61,48 @@ function switchscren(ev) {
   });
 }
 
+const varianteClose = document.getElementById("variants-list");
+const addVarianteBtn = document.getElementById("btn-add-variant");
+
+addVarianteBtn.addEventListener("click", () => {
+  varianteClose.classList.remove("variants__list");
+
+  varianteClose.insertAdjacentHTML("beforeend", `
+    <div class="variant-row">
+      <input type="text" class="input variant-row__name" placeholder="Variant name (e.g., 'Early Bird')" />
+      <input type="number" class="input variant-row__qty" placeholder="Qty" min="1" />
+      <input type="number" class="input variant-row__value" placeholder="Value" step="0.01" />
+      <select class="select variant-row__type">
+        <option value="fixed">Fixed Price</option>
+        <option value="percentage">Percentage Off</option>
+      </select>
+      <button type="button" class="btn btn--danger btn--small variant-row__remove">Remove</button>
+    </div>
+  `);
+
+});
+
+function addVariante() {
+  let variantRowName = varianteClose.querySelectorAll(".variant-row__name");
+  let variantRowqty = varianteClose.querySelectorAll(".variant-row__qty");
+  let variantRowvalue = varianteClose.querySelectorAll(".variant-row__value");
+  let variantRowType = varianteClose.querySelectorAll(".variant-row__type");
+ let variants = [];
+  for (let i = 0; i < variantRowName.length; i++) {
+    variants.push({
+      name: variantRowName[i].value,
+      qty: parseInt(variantRowqty[i].value),
+      value: parseFloat(variantRowvalue[i].value),
+      type: variantRowType[i].value
+    });
+  }
+
+  return variants;
+}
+
+let id=0;
 function handleFormSubmit(e) {
   e.preventDefault();
-
   const titleInput = document.getElementById("event-title").value.trim();
   const imageInput = document.getElementById("event-image").value.trim();
   const form = document.getElementById("event-form");
@@ -85,27 +122,32 @@ function handleFormSubmit(e) {
     valid = false;
   }
 
-  if (!UrlRegexp.test(imageInput)) {
-    ErrorMsg.classList.remove("is-hidden");
-    ErrorMsg.textContent = "Please enter a valid image URL.";
-    valid = false;
-  }
+  // if (!UrlRegexp.test(imageInput)) {
+  //   ErrorMsg.classList.remove("is-hidden");
+  //   ErrorMsg.textContent = "Please enter a valid image URL.";
+  //   valid = false;
+  // }
 
   if (valid) {
     ErrorMsg.classList.add("is-hidden");
-    events = JSON.parse(localStorage.getItem("event")) || [];
+    events = JSON.parse(localStorage.getItem("event")) ;
+
     const newEvent = {
+      id:++id,
       title: titleInput.toLowerCase(),
       image: imageInput,
       description: eventDescriptionInput,
       seats: parseInt(eventSeatsInput),
       price: parseFloat(eventPriceInput),
-    };
+      variants: addVariante()
+    }; 
     events.push(newEvent);
     localStorage.setItem("event", JSON.stringify(events));
+    console.log(events);
     form.reset();
   }
-
+  //ila maderthach hna maghadich tjib data dyal variants
+  varianteClose.innerHTML="";
   char();
   renderEventsTable();
 }
@@ -113,24 +155,23 @@ function handleFormSubmit(e) {
 const tbody = document.querySelector(".table__body");
 
 function renderEventsTable() {
-  if (!tbody) return;
   tbody.innerHTML = "";
-  events = JSON.parse(localStorage.getItem("event")) || [];
+  events = JSON.parse(localStorage.getItem("event")) ;
   events.forEach((event, index) => {
-    tbody.innerHTML += `
+    tbody.insertAdjacentHTML("beforeend", `
       <tr class="table__row">
-        <td>${index + 1}</td>
+        <td>${event.id}</td>
         <td>${event.title}</td>
         <td>${event.seats}</td>
         <td>${event.price}</td>
-        <td><span class="badge">3</span></td>
+        <td><span class="badge">${event.variants.length}</span></td>
         <td>
           <button class="btn btn--small" onclick="ViewDetails(${index})">Details</button>
           <button class="btn btn--small" onclick="EditEvent(${index})">Edit</button>
           <button class="btn btn--danger btn--small" id="deletebtn-${index}" onclick="DeleteEvent(${index})">Delete</button>
         </td>
       </tr>
-    `;
+    `);
   });
   renderStats();
 }
@@ -138,8 +179,8 @@ renderEventsTable();
 
 // delete event 
 function DeleteEvent(index) {
-  events = JSON.parse(localStorage.getItem("event")) || [];
-  archive = JSON.parse(localStorage.getItem("archived")) || [];
+  events = JSON.parse(localStorage.getItem("event"));
+  archive = JSON.parse(localStorage.getItem("archived")) ;
 
   if (events[index]) {
     archive.push(events[index]);
@@ -156,12 +197,12 @@ function ArchiveData() {
   const archiveTable = document.getElementById("tablebody");
   if (!archiveTable) return;
 
-  archive = JSON.parse(localStorage.getItem("archived")) || [];
+  archive = JSON.parse(localStorage.getItem("archived")) ;
   archiveTable.innerHTML = "";
   archive.forEach((item, index) => {
-    archiveTable.innerHTML += `
+    archiveTable.insertAdjacentHTML("beforeend",  `
       <tr class="table__row" data-event-id="${index}">
-        <td>${index + 1}</td>
+        <td>${item.id}</td>
         <td>${item.title}</td>
         <td>${item.seats}</td>
         <td>${item.price}$</td>
@@ -169,28 +210,43 @@ function ArchiveData() {
           <button class="btn btn--small" id="Restore-${index}" onclick="RestoreEvent(${index})">Restore</button>
         </td>
       </tr>
-    `;
+    `);
   });
 }
 ArchiveData();
 
 // Details modal
 const modal = document.querySelector("#event-modal");
-
 function ViewDetails(index) {
-  events = JSON.parse(localStorage.getItem("event")) || [];
-  const modelDetails = document.getElementById("modal-body");
-  if (!modal || !modelDetails || !events[index]) return;
+  const events = JSON.parse(localStorage.getItem("event")) ;
+ 
 
+  const modalDetails = document.getElementById("modal-body");
   modal.classList.remove("is-hidden");
-  modelDetails.innerHTML = `
+
+
+  modalDetails.innerHTML = `
     <h3>${events[index].title}</h3>
-    <p>ID: ${index + 1}</p>
+    <p>ID: ${events[index].id}</p>
     <p>Image:</p>
     <img src="${events[index].image}" class="image" alt="Event Image"/>
     <p>Seats: ${events[index].seats}</p>
-    <p>Price: ${events[index].price}$</p>
-    <p>Variants: ${events[index].title}</p>
+    <p>Price: ${events[index].price }$</p>
+    <div class="variantsDetails">
+    <h2> Nombre Variants(${events[index].variants.length})</h2>
+      ${events[index].variants.map(
+          (v, i) => `
+            <div class="variant">       
+              <h4>Variant ${i+1}: ${v.name}</h4>
+              <p>Quantity: ${v.qty}</p>
+              <p>Value: ${v.value}</p>
+              <p>Type: ${v.type}</p>
+            </div>
+          `
+        )
+        .join("")}
+
+    </div>
   `;
 }
 
@@ -202,9 +258,8 @@ if (closModal) {
 }
 
 function RestoreEvent(index) {
-  archive = JSON.parse(localStorage.getItem("archived")) || [];
-  events = JSON.parse(localStorage.getItem("event")) || [];
-
+  archive = JSON.parse(localStorage.getItem("archived")) ;
+  events = JSON.parse(localStorage.getItem("event")) ;
   if (archive[index]) {
     events.push(archive[index]);
     archive.splice(index, 1);
@@ -218,12 +273,9 @@ function RestoreEvent(index) {
 
 function searchData() {
   const searchEvents = document.getElementById("search-events");
-  if (!tbody || !searchEvents) return;
-
   events = JSON.parse(localStorage.getItem("event")) || [];
   const query = searchEvents.value.toLowerCase();
   tbody.innerHTML = "";
-
   for (let i = 0; i < events.length; i++) {
     if (events[i].title.includes(query)) {
       tbody.innerHTML += `
@@ -234,9 +286,9 @@ function searchData() {
           <td>${events[i].price}</td>
           <td><span class="badge">3</span></td>
           <td>
-            <button class="btn btn--small" onclick="ViewDetails(${i})">Details</button>
-            <button class="btn btn--small" onclick="EditEvent(${i})">Edit</button>
-            <button class="btn btn--danger btn--small" id="deletebtn-${i}" onclick="DeleteEvent(${i})">Delete</button>
+            <button class="btn btn--small" >Details</button>
+            <button class="btn btn--small"  id="editBtn">Edit</button>
+            <button class="btn btn--danger btn--small" id="deletebtn">Delete</button>
           </td>
         </tr>
       `;
@@ -259,7 +311,26 @@ function sortData(value) {
     sortSeats();
   }
 }
-
+function AfficheNewSortData(){
+    tbody.innerHTML = "";
+  console.log(tbody);
+  events.forEach((event, index) => {
+    tbody.innerHTML+= `
+      <tr class="table__row">
+        <td>${event.id}</td>
+        <td>${event.title}</td>
+        <td>${event.seats}</td>
+        <td>${event.price}</td>
+        <td><span class="badge">3</span></td>
+        <td>
+          <button class="btn btn--small">Details</button>
+          <button class="btn btn--small"id="editBtn">Edit</button>
+          <button class="btn btn--danger btn--small" id="deletebtn">Delete</button>
+        </td>
+      </tr>
+    `;
+  });
+}
 function sortAZ() {
   for (let i = 0; i < events.length; i++) {
     for (let j = 0; j < events.length - i - 1; j++) {
@@ -270,24 +341,7 @@ function sortAZ() {
       }
     }
   }
-  tbody.innerHTML = "";
-  console.log(tbody);
-  events.forEach((event, index) => {
-    tbody.innerHTML += `
-      <tr class="table__row">
-        <td>${index + 1}</td>
-        <td>${event.title}</td>
-        <td>${event.seats}</td>
-        <td>${event.price}</td>
-        <td><span class="badge">3</span></td>
-        <td>
-          <button class="btn btn--small" onclick="ViewDetails(${index})">Details</button>
-          <button class="btn btn--small" onclick="EditEvent(${index})">Edit</button>
-          <button class="btn btn--danger btn--small" id="deletebtn" onclick="DeleteEvent(${index})">Delete</button>
-        </td>
-      </tr>
-    `;
-  });
+AfficheNewSortData();
 }
 
 function sortZA() {
@@ -301,24 +355,7 @@ function sortZA() {
     }
   }
   console.log(events[0].title);
-  tbody.innerHTML = "";
-  console.log(tbody);
-  events.forEach((event, index) => {
-    tbody.innerHTML += `
-      <tr class="table__row">
-        <td>${index + 1}</td>
-        <td>${event.title}</td>
-        <td>${event.seats}</td>
-        <td>${event.price}</td>
-        <td><span class="badge">3</span></td>
-        <td>
-          <button class="btn btn--small" onclick="ViewDetails(${index})">Details</button>
-          <button class="btn btn--small" onclick="EditEvent(${index})">Edit</button>
-          <button class="btn btn--danger btn--small" id="deletebtn" onclick="DeleteEvent(${index})">Delete</button>
-        </td>
-      </tr>
-    `;
-  });
+AfficheNewSortData();
 }
 
 function priceLoHi() {
@@ -331,24 +368,7 @@ function priceLoHi() {
       }
     }
   }
-  tbody.innerHTML = "";
-  console.log(tbody);
-  events.forEach((event, index) => {
-    tbody.innerHTML += `
-      <tr class="table__row">
-        <td>${index + 1}</td>
-        <td>${event.title}</td>
-        <td>${event.seats}</td>
-        <td>${event.price}</td>
-        <td><span class="badge">3</span></td>
-        <td>
-          <button class="btn btn--small" onclick="ViewDetails(${index})">Details</button>
-          <button class="btn btn--small" onclick="EditEvent(${index})">Edit</button>
-          <button class="btn btn--danger btn--small" id="deletebtn" onclick="DeleteEvent(${index})">Delete</button>
-        </td>
-      </tr>
-    `;
-  });
+AfficheNewSortData();
 }
 
 function priceHiLo() {
@@ -361,24 +381,7 @@ function priceHiLo() {
       }
     }
   }
-  tbody.innerHTML = "";
-  console.log(tbody);
-  events.forEach((event, index) => {
-    tbody.innerHTML += `
-      <tr class="table__row">
-        <td>${index + 1}</td>
-        <td>${event.title}</td>
-        <td>${event.seats}</td>
-        <td>${event.price}</td>
-        <td><span class="badge">3</span></td>
-        <td>
-          <button class="btn btn--small" onclick="ViewDetails(${index})">Details</button>
-          <button class="btn btn--small" onclick="EditEvent(${index})">Edit</button>
-          <button class="btn btn--danger btn--small" id="deletebtn" onclick="DeleteEvent(${index})">Delete</button>
-        </td>
-      </tr>
-    `;
-  });
+AfficheNewSortData();
 }
 
 function sortSeats() {
@@ -391,24 +394,7 @@ function sortSeats() {
       }
     }
   }
-  tbody.innerHTML = "";
-  console.log(tbody);
-  events.forEach((event, index) => {
-    tbody.innerHTML += `
-      <tr class="table__row">
-        <td>${index + 1}</td>
-        <td>${event.title}</td>
-        <td>${event.seats}</td>
-        <td>${event.price}</td>
-        <td><span class="badge">3</span></td>
-        <td>
-          <button class="btn btn--small" onclick="ViewDetails(${index})">Details</button>
-          <button class="btn btn--small" onclick="EditEvent(${index})" id="editBtn">Edit</button>
-          <button class="btn btn--danger btn--small" id="deletebtn" onclick="DeleteEvent(${index})">Delete</button>
-        </td>
-      </tr>
-    `;
-  });
+AfficheNewSortData();
 }
 
 
@@ -424,16 +410,15 @@ let temp;
 const inputs = document.querySelectorAll(".inputs");
 
 function EditEvent(index) {
-  events = JSON.parse(localStorage.getItem("event")) || [];
-  if (!events[index]) return;
+  events = JSON.parse(localStorage.getItem("event"));
 
   temp = index;
-  if (editModal) editModal.classList.remove("is-hidden");
-  inputs[0].value = events[index].title || "";
-  inputs[1].value = events[index].image || "";
-  inputs[2].value = events[index].description || "";
-  inputs[3].value = events[index].seats || "";
-  inputs[4].value = events[index].price || "";
+  editModal.classList.remove("is-hidden");
+  inputs[0].value = events[index].title ;
+  inputs[1].value = events[index].image;
+  inputs[2].value = events[index].description ;
+  inputs[3].value = events[index].seats ;
+  inputs[4].value = events[index].price ;
 }
 
 const editEvent = document.getElementById("edit-event");
@@ -455,3 +440,4 @@ if (editEvent) {
     }
   });
 }
+// localStorage.clear();
