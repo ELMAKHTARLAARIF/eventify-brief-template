@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Events Management App</title>
     <link rel="stylesheet" href="style.css">
     <script src="main.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
     <div class="app">
         <!-- SIDEBAR -->
@@ -56,7 +59,7 @@
 
             <!-- SCREENS (only one visible at a time) -->
             <div class="screens">
-                
+
                 <!-- SCREEN 1: Statistics (DEFAULT) -->
                 <section class="screen is-visible" data-screen="stats">
                     <div class="screen__content">
@@ -79,34 +82,34 @@
                         </div>
 
                         <!-- Placeholder for chart (students can add Chart.js or similar) -->
-<div style="width: 1100px;">
-  <canvas id="myChart"></canvas>
-</div>
+                        <div style="width: 1100px;">
+                            <canvas id="myChart"></canvas>
+                        </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                  
+                        <!-- <script>
+                            const events= require("./main.js")
+                            const ctx = document.getElementById('myChart');
 
-<script>
-  const ctx = document.getElementById('myChart');
-
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: ['event 1', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-      datasets: [{
-        label: '# of Votes',
-        data: [12, 19, 3, 5, 2, 3],
-        borderWidth: 3
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
-</script>
+                            new Chart(ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: events.length,
+                                    datasets: [{
+                                        label: '# of Votes',
+                                        data: [12, 19, 3, 5, 2, 3],
+                                        borderWidth: 3
+                                    }]
+                                },
+                                options: {
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true
+                                        }
+                                    }
+                                }
+                            });
+                        </script> -->
 
                     </div>
                 </section>
@@ -121,92 +124,69 @@
                             <!-- Title -->
                             <div class="form__group">
                                 <label class="form__label" for="event-title">Event Title</label>
-                                <input 
-                                    type="text" 
-                                    id="event-title" 
-                                    class="input" 
-                                    placeholder="Enter event title"
-                                    required
-                                >
+                                <input type="text" id="event-title" class="input" placeholder="Enter event title"
+                                    required>
                             </div>
 
                             <!-- Image URL -->
                             <div class="form__group">
                                 <label class="form__label" for="event-image">Image URL</label>
-                                <input 
-                                    type="url" 
-                                    id="event-image" 
-                                    class="input" 
-                                    placeholder="https://example.com/image.jpg"
-                                >
+                                <input type="url" id="event-image" class="input"
+                                    placeholder="https://example.com/image.jpg" required>
                             </div>
 
                             <!-- Description -->
                             <div class="form__group">
                                 <label class="form__label" for="event-description">Description</label>
-                                <textarea 
-                                    id="event-description" 
-                                    class="input" 
-                                    placeholder="Describe the event..."
-                                    rows="4"
-                                ></textarea>
+                                <textarea id="event-description" class="input" placeholder="Describe the event..."
+                                    rows="4"></textarea>
                             </div>
 
                             <!-- Seats -->
                             <div class="form__group">
                                 <label class="form__label" for="event-seats">Number of Seats</label>
-                                <input 
-                                    type="number" 
-                                    id="event-seats" 
-                                    class="input" 
-                                    placeholder="100"
-                                    min="1"
-                                    required
-                                >
+                                <input type="number" id="event-seats" class="input" placeholder="100" min="1" required>
                             </div>
 
                             <!-- Base Price -->
                             <div class="form__group">
                                 <label class="form__label" for="event-price">Base Price ($)</label>
-                                <input 
-                                    type="number" 
-                                    id="event-price" 
-                                    class="input" 
-                                    placeholder="50.00"
-                                    min="0"
-                                    step="0.01"
-                                    required
-                                >
+                                <input type="number" id="event-price" class="input" placeholder="50.00" min="0"
+                                    step="0.01" required>
                             </div>
 
                             <!-- VARIANTS SECTION -->
                             <fieldset class="variants">
                                 <legend class="variants__title">
                                     Pricing Variants (Optional)
-                                    <button type="button" class="btn btn--small" id="btn-add-variant">+ Add Variant</button>
+                                    <button type="button" class="btn btn--small" id="btn-add-variant">+ Add
+                                        Variant</button>
                                 </legend>
-                                
+
                                 <!-- Variant rows will be appended here by JS -->
                                 <div id="variants-list" class="variants__list">
                                     <!-- EXAMPLE: Students should clone this structure -->
-                                    
-                                    <div class="variant-row">
-                                        <input type="text" class="input variant-row__name" placeholder="Variant name (e.g., 'Early Bird')" />
+                                    <!-- <div class="variant-row">
+                                        <input type="text" class="input variant-row__name"
+                                            placeholder="Variant name (e.g., 'Early Bird')" />
                                         <input type="number" class="input variant-row__qty" placeholder="Qty" min="1" />
-                                        <input type="number" class="input variant-row__value" placeholder="Value" step="0.01" />
+                                        <input type="number" class="input variant-row__value" placeholder="Value"
+                                            step="0.01" />
                                         <select class="select variant-row__type">
                                             <option value="fixed">Fixed Price</option>
                                             <option value="percentage">Percentage Off</option>
                                         </select>
-                                        <button type="button" class="btn btn--danger btn--small variant-row__remove">Remove</button>
-                                    </div>
-                                    
+                                        <button type="button"
+                                            class="btn btn--danger btn--small variant-row__remove">Remove</button>
+                                    </div> -->
+
                                 </div>
                             </fieldset>
 
                             <!-- Submit Button -->
                             <div class="form__actions">
-                                <button type="submit" class="btn btn--primary" onclick="handleFormSubmit(event)">Create Event</button>
+                                <button type="submit" class="btn btn--primary" onclick="handleFormSubmit(event)">Create
+                                    Event</button>
                                 <button type="reset" class="btn btn--ghost">Clear</button>
                             </div>
                         </form>
@@ -218,15 +198,11 @@
                     <div class="screen__content">
                         <!-- Search & Sort Controls -->
                         <div class="controls">
-                            <input 
-                                type="text" 
-                                id="search-events" 
-                                class="input" 
-                                placeholder="🔍 Search events by title..."
-                            >
-                            <select id="sort-events" class="select">
-                                <option value="title-asc">Sort: Title (A-Z)</option>
-                                <option value="title-desc">Sort: Title (Z-A)</option>
+                            <input type="text" id="search-events" class="input"
+                                placeholder="🔍 Search events by title..." onkeyup="searchData()">
+                            <select id="sort-events" class="select" onchange="sortData(this.value)">
+                                <option value="title-asc" id="sortAZ">Sort: Title (A-Z)</option>
+                                <option value="title-desc" id="sortZA">Sort: Title (Z-A)</option>
                                 <option value="price-asc">Sort: Price (Low to High)</option>
                                 <option value="price-desc">Sort: Price (High to Low)</option>
                                 <option value="seats-asc">Sort: Seats (Low to High)</option>
@@ -247,25 +223,113 @@
                             </thead>
                             <tbody class="table__body">
                                 <!-- EXAMPLE: Students will populate this with JS -->
-                                <tr class="table__row" data-event-id="1">
-                                    <td>0</td>
+                                <!-- <tr class="table__row" data-event-id="1">
+                                    <td></td>
                                     <td>aucun event</td>
-                                    <td>0</td>
-                                    <td>$0</td>
-                                    <td><span class="badge">0</span></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><span class="badge"></span></td>
                                     <td>
-                                        <button class="btn btn--small" data-action="details" data-event-id="1">Details</button>
-                                        <button class="btn btn--small" data-action="edit" data-event-id="1">Edit</button>
-                                        <button class="btn btn--danger btn--small" data-action="archive" data-event-id="1">Delete</button>
+                                        <button class="btn btn--small" data-action="details"
+                                            data-event-id="1">Details</button>
+                                        <button class="btn btn--small" data-action="edit"
+                                            data-event-id="1">Edit</button>
+                                        <button class="btn btn--danger btn--small" data-action="archive"
+                                            data-event-id="1">Delete</button>
                                     </td>
-                                </tr>
-                            
+                                </tr> -->
+
                             </tbody>
                         </table>
 
                         <!-- Pagination -->
                         <div class="pagination" id="events-pagination">
                             <!-- JS will generate pagination buttons -->
+                        </div>
+                    </div>
+
+                    <div class="modal is-hidden" id="edit-modal">
+
+                        <div class="screen__content" id="edit-modal-content">
+                            <div class="edit-modal-title">
+                                <h3 class="modal__title" id="modal-title">Edit Event </h3>
+                                <button class="modal__close" data-action="close-modal" id="close-edit-modal">&times;</button>
+                            </div>
+
+                            <form class="form" id="event-form-edit">
+                                <!-- Error messages area -->
+                                <div class="alert alert--error is-hidden" id="form-errors"></div>
+
+                                <!-- Title -->
+                                <div class="form__group">
+                                    <label class="form__label" for="event-title">Event Title</label>
+                                    <input type="text" id="event-title" class="inputs" placeholder="Enter event title"
+                                        required>
+                                </div>
+
+                                <!-- Image URL -->
+                                <div class="form__group">
+                                    <label class="form__label" for="event-image">Image URL</label>
+                                    <input type="url" id="event-image" class="inputs"
+                                        placeholder="https://example.com/image.jpg">
+                                </div>
+
+                                <!-- Description -->
+                                <div class="form__group">
+                                    <label class="form__label" for="event-description">Description</label>
+                                    <textarea id="event-description" class="inputs" placeholder="Describe the event..."
+                                        rows="4"></textarea>
+                                </div>
+
+                                <!-- Seats -->
+                                <div class="form__group">
+                                    <label class="form__label" for="event-seats">Number of Seats</label>
+                                    <input type="number" id="event-seats" class="inputs" placeholder="100" min="1"
+                                        required>
+                                </div>
+
+                                <!-- Base Price -->
+                                <div class="form__group">
+                                    <label class="form__label" for="event-price">Base Price ($)</label>
+                                    <input type="number" id="event-price" class="inputs" placeholder="50.00" min="0"
+                                        step="0.01" required>
+                                </div>
+
+                                <!-- VARIANTS SECTION -->
+                                <fieldset class="variants">
+                                    <legend class="variants__title">
+                                        Pricing Variants (Optional)
+                                        <button type="button" class="btn btn--small" id="btn-add-variant">+ Add
+                                            Variant</button>
+                                    </legend>
+
+                                    <!-- Variant rows will be appended here by JS -->
+                                    <div id="variants-list" class="variants__list">
+                                        <!-- EXAMPLE: Students should clone this structure -->
+
+                                        <div class="variant-row">
+                                            <input type="text" class="inputs variant-row__name"
+                                                placeholder="Variant name (e.g., 'Early Bird')" />
+                                            <input type="number" class="inputs variant-row__qty" placeholder="Qty"
+                                                min="1" />
+                                            <input type="number" class="inputs variant-row__value" placeholder="Value"
+                                                step="0.01" />
+                                            <select class="select variant-row__type">
+                                                <option value="fixed">Fixed Price</option>
+                                                <option value="percentage">Percentage Off</option>
+                                            </select>
+                                            <button type="button"
+                                                class="btn btn--danger btn--small variant-row__remove">Remove</button>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <!-- Submit Button -->
+                                <div class="form__actions">
+                                    <button type="submit" class="btn btn--primary" id="edit-event">Edit event</button>
+                                    <button type="reset" class="btn btn--ghost">Clear</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </section>
@@ -283,7 +347,7 @@
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody class="table__body">
+                            <tbody class="table__body" id="tablebody">
                                 <!-- EXAMPLE: Students will populate this with JS -->
                                 <!-- 
                                 <tr class="table__row" data-event-id="1">
@@ -292,7 +356,7 @@
                                     <td>50</td>
                                     <td>$29.99</td>
                                     <td>
-                                        <button class="btn btn--small" data-action="restore" data-event-id="1">Restore</button>
+                                        <button class="restorbtn btn--small" data-action="restore" data-event-id="1">Restore</button>
                                     </td>
                                 </tr>
                                 -->
@@ -307,18 +371,17 @@
 
     <!-- MODAL (hidden by default) -->
     <div class="modal is-hidden" id="event-modal">
-        <div class="modal__overlay"></div>
+        <!-- <div class="modal__overlay"></div> -->
         <div class="modal__content">
             <header class="modal__header">
                 <h3 class="modal__title" id="modal-title">Event Details</h3>
-                <button class="modal__close" data-action="close-modal">&times;</button>
+                <button class="modal__close" data-action="close-modal" id="close-modal">&times;</button>
             </header>
             <div class="modal__body" id="modal-body">
                 <!-- Content populated by JS -->
             </div>
         </div>
     </div>
-
     <!-- SAMPLE DATA (for reference) -->
     <!-- 
     const sampleEvents = [
@@ -339,8 +402,8 @@
 
     const sampleArchive = [];
     -->
-
-
+      
 
 </body>
+
 </html>
