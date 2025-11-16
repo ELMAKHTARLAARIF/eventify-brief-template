@@ -46,7 +46,7 @@ function renderStats() {
     document.getElementById('stat-total-price').textContent = '$' + totalPrice.toFixed(2);
     char();
 }
-
+//switch screen
 const sidebar_btns = document.querySelectorAll(".sidebar__btn");
 const screens = document.querySelectorAll(".screen");
 function switchscren(ev) {
@@ -60,7 +60,7 @@ function switchscren(ev) {
     }
   });
 }
-
+// add variante formula
 const varianteClose = document.getElementById("variants-list");
 const addVarianteBtn = document.getElementById("btn-add-variant");
 
@@ -87,6 +87,7 @@ addVarianteBtn.addEventListener("click", () => {
   });
 });
 const ErrorMsg = document.querySelector("#form-errors");
+//add variante inputs
 function addVariante() {
   let variantRowName = varianteClose.querySelectorAll(".variant-row__name");
   let variantRowqty = varianteClose.querySelectorAll(".variant-row__qty");
@@ -109,10 +110,13 @@ function addVariante() {
     ErrorMsg.classList.remove("is-hidden");
     ErrorMsg.textContent = "All fields are required.";
   }
+  console.log(variants)
   return variants;
+  
 }
+// id => localStorage ila kan locaStorage mafihch id flwel id = 1
 let Id =JSON.parse((localStorage.getItem("keyId"))) || 1;
-
+// add event formula
 function handleFormSubmit(e) {
   
   e.preventDefault();
@@ -134,15 +138,15 @@ function handleFormSubmit(e) {
     ErrorMsg.textContent = "All fields are required.";
     valid = false;
   }
-  // if (!UrlRegexp.test(imageInput)) {
-  //   ErrorMsg.classList.remove("is-hidden");
-  //   ErrorMsg.textContent = "Please enter a valid image URL.";
-  //   valid = false;
-  // }
+  if (!UrlRegexp.test(imageInput)) {
+    ErrorMsg.classList.remove("is-hidden");
+    ErrorMsg.textContent = "Please enter a valid image URL.";
+    valid = false;
+  }
 
   if (valid) {
     ErrorMsg.classList.add("is-hidden");
-    events = JSON.parse(localStorage.getItem("event")) || [] ;
+    events = JSON.parse(localStorage.getItem("event"));
 
     const newEvent = {
       id:Id,
@@ -151,13 +155,13 @@ function handleFormSubmit(e) {
       description: eventDescriptionInput,
       seats: parseInt(eventSeatsInput),
       price: parseFloat(eventPriceInput),
-      variants: addVariante()
+      variants: addVariante()||[]
     }; 
     events.push(newEvent);
     localStorage.setItem("event", JSON.stringify(events));
     Id++;
     localStorage.setItem("keyId", JSON.stringify(Id))
-    // form.reset();
+    form.reset();
   }
   //ila maderthach hna maghadich tjib data dyal variants
   varianteClose.innerHTML="";
@@ -166,7 +170,7 @@ function handleFormSubmit(e) {
 }
 
 const tbody = document.querySelector(".table__body");
-
+//afiche event in the list table
 function renderEventsTable() {
   tbody.innerHTML = "";
   events = JSON.parse(localStorage.getItem("event"))|| [];
@@ -177,11 +181,11 @@ function renderEventsTable() {
         <td>${event.title}</td>
         <td>${event.seats}</td>
         <td>${event.price}</td>
-        <td><span class="badge">${(event.variants||[]).length}</span></td>
+        <td><span class="badge">${event.variants.length}</span></td>
         <td>
           <button class="btn btn--small" onclick="ViewDetails(${index})">Details</button>
           <button class="btn btn--small" onclick="EditEvent(${index})">Edit</button>
-          <button class="btn btn--danger btn--small" id="deletebtn-${index}" onclick="DeleteEvent(${index})">Delete</button>
+          <button class="btn btn--danger btn--small" onclick="DeleteEvent(${index})">Delete</button>
         </td>
       </tr>
     `);
@@ -222,8 +226,8 @@ const modalDetails = document.getElementById("modal-body");
 
 // delete event 
 function DeleteEvent(index) {
-  events = JSON.parse(localStorage.getItem("event")) || [];
-  archive = JSON.parse(localStorage.getItem("archived")) ||[];
+  events = JSON.parse(localStorage.getItem("event")) ;
+  archive = JSON.parse(localStorage.getItem("archived")) ;
 
   if (events[index]) {
     archive.push(events[index]);
@@ -240,6 +244,7 @@ function ArchiveData() {
   const archiveTable = document.getElementById("tablebody");
 
   archive = JSON.parse(localStorage.getItem("archived")) ||[];
+  console.log(archive)
   archiveTable.innerHTML = "";
   archive.forEach((item, index) => {
     archiveTable.insertAdjacentHTML("beforeend",  `
